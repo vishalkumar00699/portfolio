@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vishal Kumar — Full‑Stack & IoT Engineer</title>
+  <meta name="description" content="Vishal Kumar — Full‑Stack & IoT Engineer. Building production‑grade Android apps, Flutter dashboards, Next.js platforms, and real‑time BLE ecosystems." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #050810;
+      --bg2: #080d1a;
+      --surface: #0d1424;
+      --surface2: #111827;
+      --border: #1e2d4a;
+      --border2: rgba(99, 179, 237, 0.15);
+      --accent: #38bdf8;
+      --accent2: #818cf8;
+      --accent3: #34d399;
+      --accent4: #fb923c;
+      --text: #f0f4ff;
+      --text2: #94a3b8;
+      --text3: #475569;
+      --glow: rgba(56, 189, 248, 0.15);
+      --glow2: rgba(129, 140, 248, 0.12);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.35;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 5%;
+      background: rgba(5, 8, 16, 0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text2);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      background: linear-gradient(135deg, #0ea5e9, #6366f1);
+      color: #fff !important;
+      padding: 0.5rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600 !important;
+    }
+
+    .nav-cta::after {
+      display: none !important;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+    }
+
+    section {
+      padding: 6rem 5%;
+    }
+
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 8rem;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+      width: fit-content;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--accent3);
+      border-radius: 50%;
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.5;
+        transform: scale(1.5);
+      }
+    }
+
+    .hero-name {
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-name .highlight {
+      background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-role {
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      color: var(--text2);
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-role .tag {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .hero-desc {
+      max-width: 700px;
+      color: var(--text2);
+      font-size: 1.05rem;
+      margin-bottom: 2.5rem;
+      line-height: 1.8;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #0ea5e9, #6366f1);
+      color: #fff;
+      padding: 0.85rem 2rem;
+      border-radius: 10px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 30px rgba(14, 165, 233, 0.2);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 40px rgba(14, 165, 233, 0.35);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      color: var(--text);
+      padding: 0.85rem 2rem;
+      border-radius: 10px;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      background: rgba(56, 189, 248, 0.05);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 4rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-num {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text3);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .section-title .accent {
+      color: var(--accent);
+    }
+
+    .section-sub {
+      color: var(--text2);
+      max-width: 520px;
+      margin: 1rem auto 0;
+      line-height: 1.8;
+    }
+
+    #skills {
+      background: var(--bg2);
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .skill-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+
+    .skill-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border2);
+      box-shadow: 0 0 40px var(--glow);
+    }
+
+    .skill-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .skill-name {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .skill-desc {
+      font-size: 0.85rem;
+      color: var(--text2);
+      margin-bottom: 1rem;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .skill-tag {
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .tag-blue {
+      background: rgba(56, 189, 248, 0.08);
+      color: #38bdf8;
+    }
+
+    .tag-green {
+      background: rgba(52, 211, 153, 0.08);
+      color: #34d399;
+    }
+
+    .tag-purple {
+      background: rgba(129, 140, 248, 0.08);
+      color: #818cf8;
+    }
+
+    .tag-orange {
+      background: rgba(251, 146, 60, 0.08);
+      color: #fb923c;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 2rem;
+    }
+
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: transform 0.35s, border-color 0.3s;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+
+    .project-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .project-card.blue::before {
+      background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+    }
+
+    .project-card.green::before {
+      background: linear-gradient(90deg, #34d399, #10b981);
+    }
+
+    .project-card.purple::before {
+      background: linear-gradient(90deg, #818cf8, #6366f1);
+    }
+
+    .project-header {
+      padding: 1.75rem 1.75rem 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .project-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+    }
+
+    .bg-blue-dim {
+      background: rgba(56, 189, 248, 0.1);
+    }
+
+    .bg-green-dim {
+      background: rgba(52, 211, 153, 0.1);
+    }
+
+    .bg-purple-dim {
+      background: rgba(129, 140, 248, 0.1);
+    }
+
+    .project-links {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .project-link {
+      width: 36px;
+      height: 36px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text2);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: 0.2s;
+    }
+
+    .project-link:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .project-body {
+      padding: 1.25rem 1.75rem 1.75rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+
+    .project-desc {
+      font-size: 0.875rem;
+      color: var(--text2);
+      line-height: 1.75;
+      margin-bottom: 1.25rem;
+    }
+
+    .project-features {
+      list-style: none;
+      margin-bottom: 1.5rem;
+    }
+
+    .project-features li {
+      font-size: 0.8rem;
+      color: var(--text2);
+      padding: 0.25rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .project-features li::before {
+      content: '▸';
+      font-size: 0.65rem;
+    }
+
+    .project-card.blue .project-features li::before {
+      color: #38bdf8;
+    }
+
+    .project-card.green .project-features li::before {
+      color: #34d399;
+    }
+
+    .project-card.purple .project-features li::before {
+      color: #818cf8;
+    }
+
+    .project-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .stack-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      color: var(--text2);
+      background: var(--bg2);
+    }
+
+    #about {
+      background: var(--bg2);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .about-text h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-text p {
+      color: var(--text2);
+      line-height: 1.9;
+      margin-bottom: 1rem;
+      font-size: 0.975rem;
+    }
+
+    .about-highlights {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .highlight-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .highlight-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .highlight-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .highlight-value {
+      font-size: 0.78rem;
+      color: var(--text2);
+    }
+
+    .about-timeline {
+      position: relative;
+    }
+
+    .about-timeline::before {
+      content: '';
+      position: absolute;
+      left: 18px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent), var(--accent2), transparent);
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .timeline-dot {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+      border: 2px solid var(--border);
+      background: var(--surface);
+      z-index: 1;
+    }
+
+    .timeline-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .timeline-sub {
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-desc {
+      font-size: 0.82rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    .contact-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 3rem;
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .contact-options {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .contact-card {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.8rem 1.5rem;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .contact-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--text3);
+      font-size: 0.8rem;
+      background: var(--bg2);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      .ham-btn {
+        display: block !important;
+      }
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .hero-stats {
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+      .contact-wrapper {
+        padding: 2rem;
+      }
+      .about-highlights {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+  <nav>
+    <a href="#hero" class="nav-logo">vk<span>.dev</span></a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact" class="nav-cta">Hire Me</a></li>
+    </ul>
+    <button class="ham-btn" onclick="toggleMenu()" style="background: none; border: none; color: white; font-size: 1.4rem; display: none;">☰</button>
+  </nav>
+
+  <div class="content">
+    <section id="hero">
+      <div class="hero-badge"><span class="badge-dot"></span> Open for freelance / contract work</div>
+      <h1 class="hero-name">Vishal<br/><span class="highlight">Kumar</span></h1>
+      <p class="hero-role"><span class="tag">Full‑Stack</span> & <span class="tag">IoT Engineer</span></p>
+      <p class="hero-desc">
+        Full-stack & IoT developer focused on building scalable BLE ecosystems,
+        real-time sensor dashboards, Android applications, and cloud-connected platforms.
+        Experienced in Kotlin, Jetpack Compose, React, Flutter, Node.js, and embedded IoT workflows
+        with strong emphasis on performance optimization, real-time visualization,
+        and production-grade architecture.
+      </p>
+      <div class="hero-btns">
+        <a href="#projects" class="btn-primary">View Work →</a>
+        <a href="#contact" class="btn-secondary">Get In Touch</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><div class="stat-num">6+</div><div class="stat-label">Production Projects</div></div>
+        <div class="stat-item"><div class="stat-num">8+</div><div class="stat-label">Tech Stacks</div></div>
+        <div class="stat-item"><div class="stat-num">95%</div><div class="stat-label">Performance Gains</div></div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <h2>Engineering <span style="color:var(--accent)">real‑time systems</span></h2>
+          <p>I architect and build end-to-end IoT ecosystems, real-time dashboards, and high-performance mobile apps. My work spans BLE data pipelines, Flutter cross‑platform tools, and Next.js web platforms.</p>
+          <p>At CPS Lab (NM-ICPS), I developed sensor monitoring dashboards, BLE data loggers, and a complete cloud‑connected platform used by researchers and industry partners.</p>
+          <div class="about-highlights">
+            <div class="highlight-item"><div class="highlight-icon">📡</div><div class="highlight-label">BLE / IoT</div><div class="highlight-value">Advertising, scanning, real‑time sensor ingestion</div></div>
+            <div class="highlight-item"><div class="highlight-icon">⚙️</div><div class="highlight-label">Backend & APIs</div><div class="highlight-value">Node.js, Express, MongoDB, REST</div></div>
+            <div class="highlight-item"><div class="highlight-icon">📱</div><div class="highlight-label">Mobile</div><div class="highlight-value">Kotlin, Jetpack Compose, Flutter</div></div>
+            <div class="highlight-item"><div class="highlight-icon">🌐</div><div class="highlight-label">Web</div><div class="highlight-value">Next.js, React, Vite, Tailwind</div></div>
+          </div>
+        </div>
+        <div class="about-timeline reveal">
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background: rgba(56,189,248,0.15); border-color: rgba(56,189,248,0.4);">📱</div>
+            <div class="timeline-content">
+              <div class="timeline-title">BLESense Android Platform</div>
+              <div class="timeline-sub">Kotlin · Jetpack Compose · TensorFlow Lite · BLE</div>
+              <div class="timeline-desc">Production Android app that scans BLE sensors (SHT40, LIS2DH, Ammonia, Soil Nutrient), streams accelerometer data, and uploads telemetry to cloud backend. Integrated TensorFlow Lite soil nutrient prediction, 3D motion tracking, BLE radar game, Gemini translation API, and dual-joystick robot control. Achieved 57% faster launch, 24x crash reduction, and 90% sensor accuracy.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background: rgba(129,140,248,0.15); border-color: rgba(129,140,248,0.4);">📡</div>
+            <div class="timeline-content">
+              <div class="timeline-title">BLE Sense Dashboard (Web + Backend)</div>
+              <div class="timeline-sub">React · Vite · Node.js · Express · MongoDB</div>
+              <div class="timeline-desc">Web dashboard companion for BLESense app — receives sensor data uploaded from Android devices, visualizes real‑time telemetry, manages devices, and provides analytics. Built with React/Vite frontend and Node.js backend API that handles high‑frequency BLE packets, authentication, and CSV export.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background: rgba(52,211,153,0.15); border-color: rgba(52,211,153,0.4);">☁️</div>
+            <div class="timeline-content">
+              <div class="timeline-title">Cloud Sense WebApp</div>
+              <div class="timeline-sub">Flutter · AWS Amplify · Firebase</div>
+              <div class="timeline-desc">Production Flutter IoT platform with real-time charts, geolocation maps, QR onboarding, CSV/Excel exports and multi‑device support.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background: rgba(251,146,60,0.15); border-color: rgba(251,146,60,0.4);">🌐</div>
+            <div class="timeline-content">
+              <div class="timeline-title">CPS Lab Hub Website</div>
+              <div class="timeline-sub">Next.js 13 · Three.js · AWS</div>
+              <div class="timeline-desc">Official cpslabhub.com platform with 3D animations, authentication, product catalog, and India deployment map.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <div class="section-header reveal">
+        <div class="section-tag">// Technical Arsenal</div>
+        <h2 class="section-title">Skills & <span class="accent">Technologies</span></h2>
+        <p class="section-sub">Production‑ready across full‑stack, mobile and embedded systems.</p>
+      </div>
+      <div class="skills-grid">
+        <div class="skill-card reveal"><div class="skill-icon bg-blue-dim">📱</div><div class="skill-name">Android (Kotlin)</div><div class="skill-desc">Jetpack Compose, BLE, MVVM, Coroutines, Retrofit</div><div class="skill-tags"><span class="skill-tag tag-blue">Kotlin</span><span class="skill-tag tag-blue">Compose</span><span class="skill-tag tag-blue">BLE</span></div></div>
+        <div class="skill-card reveal"><div class="skill-icon bg-green-dim">🦋</div><div class="skill-name">Flutter & Dart</div><div class="skill-desc">Cross‑platform (iOS, Android, Web) with real‑time charts</div><div class="skill-tags"><span class="skill-tag tag-green">Flutter</span><span class="skill-tag tag-green">Dart</span><span class="skill-tag tag-green">Syncfusion</span></div></div>
+        <div class="skill-card reveal"><div class="skill-icon bg-purple-dim">⚡</div><div class="skill-name">React / Next.js</div><div class="skill-desc">Modern web dashboards, server‑side rendering, 3D</div><div class="skill-tags"><span class="skill-tag tag-purple">Next.js</span><span class="skill-tag tag-purple">React</span><span class="skill-tag tag-purple">Vite</span></div></div>
+        <div class="skill-card reveal"><div class="skill-icon bg-orange-dim">🔧</div><div class="skill-name">Backend & APIs</div><div class="skill-desc">Node.js, Express, MongoDB, RESTful architecture</div><div class="skill-tags"><span class="skill-tag tag-orange">Node.js</span><span class="skill-tag tag-orange">Express</span><span class="skill-tag tag-orange">MongoDB</span></div></div>
+        <div class="skill-card reveal"><div class="skill-icon bg-blue-dim">☁️</div><div class="skill-name">Cloud & Auth</div><div class="skill-desc">AWS Amplify, Cognito, Firebase, push notifications</div><div class="skill-tags"><span class="skill-tag tag-blue">AWS</span><span class="skill-tag tag-blue">Cognito</span><span class="skill-tag tag-blue">Firebase</span></div></div>
+        <div class="skill-card reveal"><div class="skill-icon bg-green-dim">📡</div><div class="skill-name">IoT & Embedded</div><div class="skill-desc">BLE 5.0, sensor data pipelines, real‑time charts</div><div class="skill-tags"><span class="skill-tag tag-green">BLE</span><span class="skill-tag tag-green">Sensor Fusion</span><span class="skill-tag tag-green">Telemetry</span></div></div>
+      </div>
+    </section>
+
+    <section id="projects" style="background: var(--bg2);">
+      <div class="section-header reveal">
+        <div class="section-tag">// Featured Work</div>
+        <h2 class="section-title">Projects & <span class="accent">Builds</span></h2>
+        <p class="section-sub">End‑to‑end IoT ecosystems — from BLE sensors to real‑time dashboards.</p>
+      </div>
+      <div class="projects-grid">
+        <!-- BLESense Android + Dashboard ecosystem -->
+        <div class="project-card blue reveal">
+          <div class="project-header"><div class="project-icon bg-blue-dim">📡</div><div class="project-links"><a href="https://play.google.com/store/apps/details?id=com.blesense.app" target="_blank" class="project-link">▶</a><span class="project-link" title="Dashboard (Web)">📊</span></div></div>
+          <div class="project-body">
+            <div class="project-name">BLESense Ecosystem</div>
+            <div class="project-desc">Complete BLE sensor platform: Android app + cloud backend + real‑time web dashboard. Android app collects high‑frequency accelerometer and environmental data from 10+ sensors, uploads to Node.js API; React/Vite dashboard visualizes live telemetry and historical analytics.</div>
+            <ul class="project-features">
+              <li>Android BLE scanner (Kotlin + Compose) with 10+ sensor support</li>
+              <li>Real‑time accelerometer streaming & packet decoding (int8 → m/s²)</li>
+              <li>Node.js + Express REST API with MongoDB storage</li>
+              <li>React + Vite dashboard: live charts, device management, CSV export</li>
+              <li>AWS Cognito authentication & secure cloud sync</li>
+              <li>TensorFlow Lite soil nutrient prediction (on‑device ML)</li>
+              <li>BLE radar game "Hunt the Heroes" & dual‑joystick robot control</li>
+              <li>57% faster launch, 24x crash reduction, 90% accuracy gain</li>
+            </ul>
+            <div class="project-stack"><span class="stack-tag">Kotlin</span><span class="stack-tag">Jetpack Compose</span><span class="stack-tag">React</span><span class="stack-tag">Vite</span><span class="stack-tag">Node.js</span><span class="stack-tag">Express</span><span class="stack-tag">MongoDB</span><span class="stack-tag">BLE</span><span class="stack-tag">TensorFlow Lite</span></div>
+          </div>
+        </div>
+        <!-- Cloud Sense WebApp -->
+        <div class="project-card green reveal">
+          <div class="project-header"><div class="project-icon bg-green-dim">☁️</div><div class="project-links"><a href="https://play.google.com/store/apps/details?id=com.CloudSenseVis" target="_blank" class="project-link">▶</a></div></div>
+          <div class="project-body">
+            <div class="project-name">Cloud Sense WebApp</div>
+            <div class="project-desc">Production Flutter IoT monitoring suite for Android, iOS, and Web. Real‑time sensor aggregation, geo‑maps, QR onboarding, and cloud sync with AWS Amplify & Firebase.</div>
+            <ul class="project-features"><li>Real-time sensor charts (Syncfusion & fl_chart)</li><li>Geo-tagged deployment map (flutter_map)</li><li>QR code device onboarding</li><li>AWS Amplify + Firebase auth & push notifications</li><li>Multi-sensor support: datalogger, soil, ultrasonic, BLE gateway</li><li>CSV / Excel export & offline capability</li></ul>
+            <div class="project-stack"><span class="stack-tag">Flutter</span><span class="stack-tag">Dart</span><span class="stack-tag">AWS Amplify</span><span class="stack-tag">Firebase</span><span class="stack-tag">flutter_map</span><span class="stack-tag">Syncfusion</span></div>
+          </div>
+        </div>
+        <!-- CPS Lab Hub Website -->
+        <div class="project-card purple reveal">
+          <div class="project-header"><div class="project-icon bg-purple-dim">🌐</div><div class="project-links"><a href="https://cpslabhub.com" target="_blank" class="project-link">↗</a></div></div>
+          <div class="project-body">
+            <div class="project-name">CPS Lab Hub Website</div>
+            <div class="project-desc">Official NM‑ICPS CPS Lab platform. Next.js 13 with 3D product renders, authentication, training modules, India deployment map, and admin panel.</div>
+            <ul class="project-features"><li>3D models with React Three Fiber</li><li>Framer Motion animations</li><li>AWS Amplify + Cognito authentication</li><li>Interactive Leaflet map of India deployments</li><li>Admin panel for content management</li><li>SEO optimized (Open Graph & Twitter Cards)</li></ul>
+            <div class="project-stack"><span class="stack-tag">Next.js 13</span><span class="stack-tag">TypeScript</span><span class="stack-tag">Three.js</span><span class="stack-tag">TailwindCSS</span><span class="stack-tag">AWS</span><span class="stack-tag">Leaflet</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="contact-wrapper reveal">
+        <div class="availability" style="display:inline-flex; align-items:center; gap:0.5rem; background:rgba(52,211,153,0.08); border:1px solid rgba(52,211,153,0.25); color:#34d399; border-radius:100px; padding:0.35rem 1rem; margin-bottom:1rem;"><span class="badge-dot"></span> Available for new projects</div>
+        <h2>Let's build something <span style="color:var(--accent)">exceptional</span></h2>
+        <p>Full‑stack IoT platform? Real‑time dashboard? Android BLE product? Let's discuss your vision.</p>
+        <div class="contact-options">
+          <a href="mailto:vishal808066@gmail.com" class="contact-card">✉️ Email</a>
+          <a href="https://github.com/vishalkumar00699" target="_blank" class="contact-card">🐙 GitHub</a>
+          <a href="https://www.linkedin.com/in/vishal-kumar-584471251" target="_blank" class="contact-card">💼 LinkedIn</a>
+          <a href="https://wa.me/918091400699" target="_blank" class="contact-card">💬 WhatsApp</a>
+        </div>
+      </div>
+    </section>
+  </div>
+  <footer>Designed & built by Vishal Kumar · Freelance available · 2025</footer>
+
+  <script>
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [], W, H;
+    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', resize);
+    class Particle {
+      constructor() { this.reset(); }
+      reset() { this.x = Math.random() * W; this.y = Math.random() * H; this.vx = (Math.random() - 0.5) * 0.3; this.vy = (Math.random() - 0.5) * 0.3; this.r = Math.random() * 1.5 + 0.3; this.alpha = Math.random() * 0.5 + 0.1; const c = ['#38bdf8', '#818cf8', '#34d399', '#fb923c']; this.color = c[Math.floor(Math.random() * c.length)]; }
+      update() { this.x += this.vx; this.y += this.vy; if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset(); }
+      draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); ctx.fillStyle = this.color; ctx.globalAlpha = this.alpha; ctx.fill(); }
+    }
+    for (let i = 0; i < 100; i++) particles.push(new Particle());
+    function drawConnections() {
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y, d = Math.hypot(dx, dy);
+          if (d < 100) { ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.strokeStyle = '#38bdf8'; ctx.globalAlpha = (1 - d / 100) * 0.06; ctx.stroke(); }
+        }
+      }
+    }
+    function animate() { ctx.clearRect(0, 0, W, H); drawConnections(); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
+    animate();
+
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+
+    function toggleMenu() {
+      const links = document.querySelector('.nav-links');
+      if (links.style.display === 'flex') links.style.display = 'none';
+      else { links.style.display = 'flex'; links.style.flexDirection = 'column'; links.style.position = 'absolute'; links.style.top = '100%'; links.style.left = '0'; links.style.right = '0'; links.style.background = 'rgba(8,13,26,0.98)'; links.style.padding = '1.5rem'; links.style.gap = '1rem'; links.style.borderBottom = '1px solid var(--border)'; }
+    }
+    document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => { document.querySelector('.nav-links').style.display = 'none'; }));
+    if (window.innerWidth <= 768) document.querySelector('.ham-btn').style.display = 'block';
+    window.addEventListener('resize', () => { if (window.innerWidth <= 768) document.querySelector('.ham-btn').style.display = 'block'; else { document.querySelector('.ham-btn').style.display = 'none'; document.querySelector('.nav-links').style.display = ''; } });
+  </script>
+</body>
+</html>
